@@ -1,0 +1,53 @@
+package algorithm;
+
+/**
+ * @author zjn
+ **/
+public class MedianOfTwoSortedArrays {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length;
+        int total = m + n;
+        if (total % 2 == 1) {
+            int midIndex = total / 2;
+            return getKthElement(nums1, nums2, midIndex + 1);
+        } else {
+            int midIndex1 = total / 2 - 1, midIndex2 = total / 2;
+            return (getKthElement(nums1, nums2, midIndex1 + 1) + getKthElement(nums1, nums2, midIndex2 + 1)) / 2.0;
+        }
+    }
+    
+    private int getKthElement(int[] nums1, int[] nums2, int k) {
+        int length1 = nums1.length, length2 = nums2.length;
+        int index1 = 0, index2 = 0;
+        while (true) {
+            // 边界情况
+            if (index1 == length1) {
+                return nums2[index2 + k - 1];
+            }
+            
+            if (index2 == length2) {
+                return nums1[index1 + k - 1];
+            }
+            
+            if (k == 1) {
+                return Math.min(nums1[index1], nums2[index2]);
+            }
+            
+            // 正常情况
+            int mid = k / 2;
+            int newIndex1 = Math.min(mid + index1, length1) - 1;
+            int newIndex2 = Math.min(mid + index2, length2) - 1;
+            if (nums1[newIndex1] <= nums2[newIndex2]) {
+                k -= (newIndex1 - index1 + 1);
+                index1 = newIndex1 + 1;
+            } else {
+                k -= (newIndex2 - index2 + 1);
+                index2 = newIndex2 + 1;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new MedianOfTwoSortedArrays().findMedianSortedArrays(new int[]{1, 2}, new int[]{3, 4}));
+    }
+}
